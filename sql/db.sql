@@ -1,3 +1,12 @@
+CREATE TYPE lingua AS enum (
+'Inglese', 'Tedesco', 'Francese',
+'Polacco', 'Russo', 'Arabo', 'Cinese',
+'Giapponese', 'Coreano', 'Portoghese',
+'Svedese', 'Indiano', 'Italiano'
+);
+
+
+
 CREATE TABLE fornitore (
   partitaiva numeric(11, 0) PRIMARY KEY, 
   nome varchar(50), 
@@ -18,10 +27,6 @@ CREATE TABLE rifornisce (
   PRIMARY KEY (dipartimento, fornitore)
 );
 
-CREATE TABLE lingua (
-  lingua varchar(20) PRIMARY KEY
-);
-
 CREATE TABLE impiegato (
   matricola integer PRIMARY KEY, 
   nome varchar (20), 
@@ -34,8 +39,9 @@ CREATE TABLE impiegato (
 );
 
 CREATE TABLE segretario (
-  impiegato integer REFERENCES impiegato(matricola), 
-  lingua varchar(20) REFERENCES lingua(lingua)
+impiegato integer REFERENCES impiegato(matricola) ON UPDATE CASCADE ON DELETE CASCADE, 
+lingua lingua, 
+PRIMARY KEY (impiegato, lingua)
 );
 
 CREATE TABLE competenza (
@@ -79,6 +85,8 @@ CREATE TABLE partecipa (
   PRIMARY KEY(impiegato, competenza, progetto)
 );
 
+
+
 CREATE VIEW cittaprogetto(progetto, citta, regione) AS 
 SELECT 
   p.numero, 
@@ -88,6 +96,8 @@ FROM
   progetto p 
   JOIN citta ct ON p.citta = ct.nome 
   AND p.regione = ct.regione;
+
+
 
 CREATE 
 OR REPLACE FUNCTION max_progetto_citta() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN IF (
@@ -122,13 +132,15 @@ OR
 UPDATE 
   ON partecipa FOR each ROW execute procedure max_progetto_citta();
 
+
+
 CREATE 
 OR REPLACE FUNCTION impiegato_segretario() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN IF (
   new.qualifica = 'Segretario' 
   AND (
     NOT EXISTS (
       SELECT 
-        impiegato 
+        * 
       FROM 
         segretario 
       WHERE 
@@ -141,8 +153,61 @@ RETURN new;
 END $$;
 
 CREATE TRIGGER impiegato_segretario before 
+INSERT 
+OR 
 UPDATE 
   ON impiegato FOR each ROW execute procedure impiegato_segretario();
+
+
+
+CREATE 
+OR REPLACE FUNCTION vincolo_segretario(m integer) RETURNS boolean LANGUAGE plpgsql AS $$ BEGIN IF (
+  m NOT IN (
+    SELECT 
+        matricola 
+    FROM 
+        impiegato 
+    WHERE 
+          qualifica = 'Segretario' 
+        OR 
+          qualifica IS NULL 
+  )
+) THEN RETURN false;
+END IF;
+RETURN true;
+END $$;
+
+ALTER TABLE segretario 
+    ADD CONSTRAINT vincolo_segretario 
+        CHECK (vincolo_segretario(impiegato));
+
+
+
+CREATE 
+OR REPLACE FUNCTION matrimonio_unico() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN IF (
+  EXISTS (
+    SELECT 
+      * 
+    FROM 
+      matrimonio 
+    WHERE 
+      marito = new.marito 
+      OR marito = new.moglie 
+      OR moglie = new.marito 
+      OR moglie = new.moglie
+  )
+) THEN RETURN old;
+END IF;
+RETURN new;
+END $$;
+
+CREATE TRIGGER matrimonio_unico before 
+INSERT 
+OR 
+UPDATE 
+  ON matrimonio FOR each ROW execute procedure matrimonio_unico();
+
+
 
 CREATE 
 OR replace FUNCTION numero_fornitori_inc() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
@@ -160,6 +225,8 @@ CREATE TRIGGER numero_fornitori_inc before
 INSERT 
     ON rifornisce FOR each ROW execute procedure numero_fornitori_inc();
 
+
+
 CREATE 
 OR replace FUNCTION numero_fornitori_dec() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
 UPDATE 
@@ -175,6 +242,8 @@ $$;
 CREATE TRIGGER numero_fornitori_dec before 
 DELETE 
     ON rifornisce FOR each ROW execute procedure numero_fornitori_dec();
+
+
 
 CREATE 
 OR replace FUNCTION numero_fornitori_update() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
@@ -198,6 +267,8 @@ CREATE TRIGGER numero_fornitori_update before
 UPDATE 
   ON rifornisce FOR each ROW execute procedure numero_fornitori_update();
 
+
+
 CREATE 
 OR replace FUNCTION numero_progetti_inc() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
 UPDATE 
@@ -214,6 +285,8 @@ CREATE TRIGGER numero_progetti_inc before
 INSERT 
     ON partecipa FOR each ROW execute procedure numero_progetti_inc();
 
+
+
 CREATE 
 OR replace FUNCTION numero_progetti_dec() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
 UPDATE 
@@ -229,6 +302,8 @@ $$;
 CREATE TRIGGER numero_progetti_dec before 
 DELETE 
     ON partecipa FOR each ROW execute procedure numero_progetti_dec();
+
+
 
 CREATE 
 OR replace FUNCTION numero_progetti_update() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
@@ -247,9 +322,12 @@ WHERE
 RETURN new;
 END;
 $$;
+
 CREATE TRIGGER numero_progetti_update before 
 UPDATE 
   ON partecipa FOR each ROW execute procedure numero_progetti_update();
+
+
 
 CREATE INDEX index_impiegato_qualifica ON impiegato(qualifica);
 

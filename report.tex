@@ -230,9 +230,9 @@ Tipo di laurea e lingue conosciute sono, rispettivamente, attributi della prima 
 \includegraphics[width=\textwidth]{er.png}
 
 \subsubsection*{Legenda}
-\includegraphics[width=.2\textwidth]{multivalore.png}
+\includegraphics[width=.22\textwidth]{multivalore.png}
 \newline
-\includegraphics[width=.2\textwidth]{composto.png}
+\includegraphics[width=.22\textwidth]{composto.png}
 
 \newpage
 
@@ -248,7 +248,7 @@ Si esplicitano poi le regole di derivazione per gli attributi derivati introdott
 \newline
 \textbf{Dipendenti: numero progetti}
 \newline
-Conta il numero di tuple della relazione partecipa in cui compare un l'impiegato
+Conta il numero di tuple della relazione partecipa in cui compare l'impiegato
 \newline
 \newline
 \textbf{Dipartimento: numero fornitori}
@@ -262,9 +262,9 @@ Conta il numero di tuple della relazione rifornisce in cui compare il dipartimen
 \subsection{Analisi delle ridondanze}
 
 \subsubsection{Analisi dei cicli}
-Lo schema ER non presenta cicli.
+Lo schema ER non presenta cicli fatta eccezione per la relazione ricorsiva.
 \newline
-Tuttavia la configurazione scelta prevede il vincolo aziendale descritto in \hyperlink{page.9}{precedenza}.
+Tuttavia la configurazione scelta prevede il vincolo aziendale descritto in precedenza.
 
 \subsubsection{Requisiti operazionali}
 Partendo da quanto descritto nei requisiti e facendo delle assunzioni al fine di poter svolgere poi delle analisi significative, di seguito vengono formulate le principali operazioni, ciascuna con la rispettiva frequenza.
@@ -367,7 +367,7 @@ Partecipa & R & 3 & W \\ \cline{1-4}
 Impiegato & E & 1 & W \\ \cline{1-4}
 \end{tabular}
 \end{table}
-Applicando alle scritture un peso doppio rispetto alle letture, concludiamo di mantenere l'attributo derivato.
+Applicando alle scritture un peso doppio rispetto alle letture si ottengono i valori di seguito riportati.
 \begin{table}[H]
 \renewcommand{\arraystretch}{1.2}
 \centering
@@ -379,6 +379,7 @@ Costo scrittura & 1200 & 1600 \\ \cline{1-3}
 Costo totale & 45120 & 1650 \\ \cline{1-3}
 \end{tabular}
 \end{table}
+Si conclude quindi di mantenere l'attributo derivato vista la netta prevalenza delle operazioni di lettura.
 
 \newpage
 
@@ -430,7 +431,7 @@ Concetto & Tipo & Accessi & Tipo accesso\\ \cline{1-4}
 Dipartimento & E & 1 & R \\ \cline{1-4}
 \end{tabular}
 \end{table}
-Applicando alle scritture un peso doppio rispetto a alle letture, concludiamo di mantenere l'attributo derivato.
+Applicando alle scritture un peso doppio rispetto alle letture si ottengono i valori di seguito riportati.
 \begin{table}[H]
 \renewcommand{\arraystretch}{1.2}
 \centering
@@ -442,7 +443,7 @@ Costo scrittura & 40 & 80 \\ \cline{1-3}
 Costo totale & 7540 & 110 \\ \cline{1-3}
 \end{tabular}
 \end{table}
-
+Si conclude quindi di mantenere l'attributo derivato vista la netta prevalenza delle operazioni di lettura.
 \newpage
 
 \subsection{Ristrutturazione del diagramma ER}
@@ -499,9 +500,6 @@ Si è scelto di scorporare il summenzionato attributo nei campi componenti.
 - NumeroFornitori attributo derivato
 \newline
 \newline
-\textbf{Lingua} (\underline{Lingua})
-\newline
-\newline
 \textbf{Impiegato} (\underline{Matricola}, Nome, Cognome, DataDiNascita, DataDiAssunzione, Dipartimento, Qualifica, NumeroProgetti)
 \newline
 - Dipartimento chiave esterna (riferimento alla chiave primaria dell'entità Dipartimento)
@@ -522,6 +520,16 @@ Si è scelto di scorporare il summenzionato attributo nei campi componenti.
 - Città chiave esterna (riferimento alla chiave primaria dell'entità Città)
 \newline
 - Regione chiave esterna (riferimento alla chiave primaria dell'entità Città)
+\newline
+\newline
+\textbf{Tipo Laurea}
+\newline
+Si è deciso di codificare l'informazione direttamente come attributi della relazione Laureato.
+\newline
+\newline
+\textbf{Lingua}
+\newline
+Si è deciso di codificare l'informazione direttamente come attributo della relazione Segretario.
 
 \subsubsection{Traduzione delle relazioni}
 \textbf{Rifornisce} (\underline{Dipartimento, Fornitore})
@@ -565,9 +573,7 @@ Si è scelto di scorporare il summenzionato attributo nei campi componenti.
 \newline
 \textbf{Afferisce}
 \newline
-Questa relazione uno a uno non è presente nello schema relazionale.
-\newline
-Si traduce nell'aggiunta dell'attributo Dipartimento all'entità Impiegato.
+Si è deciso di codificare l'informazione direttamente come attributo dell'entità Impiegato.
 
 \newpage
 
@@ -575,10 +581,15 @@ Si traduce nell'aggiunta dell'attributo Dipartimento all'entità Impiegato.
 \includegraphics[width=1\textwidth]{r.png}
 
 \subsection{Osservazioni}
+
+\subsubsection{Vincolo sulle partecipazioni}
 Il \hyperlink{page.9}{vincolo aziendale} relativo a progetti, impiegati e città non è codificabile nello schema.
+
+\subsubsection{Vincolo sugli impiegati segretari}
+Dato che a differenza di quanto accade per gli impiegati laureati, i requisiti forniti richiedono che segretario sia uno dei possibili valori dell'attributo \textit{Qualifica} di \textbf{Impiegato}, è necessario implementare un ulteriore vincolo che garantisca che gli impiegati con \textit{Qualifica} "Segretario" compaiano nella tabella \textbf{Segretario}.
 \newline
 \newline
-Dato che a differenza di quanto accade per gli impiegati laureati la consegna richiede che segretario sia uno dei possibili valori dell'attributo qualifica di impiegato è necessario implementare un ulteriore vincolo che garantisca che solo gli impiegati con qualifica di segretario compaiano nella tabella segretario.
+Sono indicati in corsivo i nomi di attributo e in grassetto i nomi delle tabelle.
 
 \newpage
 
@@ -588,7 +599,7 @@ Dato che a differenza di quanto accade per gli impiegati laureati la consegna ri
 Si valuta in questa fase l'introduzione di indici per ottimizzare le prestazioni della base di dati.
 \newline
 \newline
-Noto che le chiavi primarie e gli attributi unici delle tabelle sono già indicizzati dal DBMS PostreSQL si è ritenuto di studiare l'uso di indici sugli attributi \textbf{competenza} e \textbf{data di assunzione} della tabella \textit{\textbf{impiegato}} e sull'attributo \textbf{budget} della tabella \textit{\textbf{progetto}}.
+Noto che le chiavi primarie e gli attributi unici delle tabelle sono già indicizzati dal DBMS PostreSQL si è ritenuto di studiare l'uso di indici sugli attributi \textit{Competenza} e \textit{DataDiAssunzione} della tabella \textbf{Impiegato} e sull'attributo \textit{Budget} della tabella \textbf{Progetto}.
 \newline
 \newline
 Per valutare l'impatto degli indici sulle operazioni di lettura e scrittura si è fatto uso come tool di profiling delle interrogazioni del comando EXPLAIN ANALISE.
@@ -721,7 +732,7 @@ Concludiamo visualizzando i risultati della profilazione tramite box plot realiz
 \includegraphics[width=0.5\textwidth]{execution_impiegato_qualifica_modifica.png}
 \newline
 \newline
-Visto l'esito del profiling e data la natura dell'attributo su cui si è costruito l'indice si ritiene di implementarlo.
+Visto l'esito del profiling si ritiene di implementare l'indice.
 
 \newpage
 
@@ -971,11 +982,27 @@ Concludiamo visualizzando i risultati della profilazione tramite box plot
 \includegraphics[width=0.5\textwidth]{execution_progetto_budget_modifica.png}
 \newline
 \newline
-Visto l'esito del profiling e data la natura dell'attributo su cui si è costruito l'indice si ritiene di implementarlo.
- 
+Visto l'esito del profiling si ritiene di implementare l'indice.
+
 \newpage
 
 \section{Implementazione}
+
+\subsection{Definizione delle enumerazioni}
+Si è valutato di sfruttare un'enumerazione per la codifica delle lingue conosciuta dal segretario.
+\newline
+Questa soluzione garantisce che il valore dell'attributo appartenga ad un insieme prestabilito.
+\newline
+\newline
+I comandi per gestire il tipo enumerazione sono semplici ma è importante notare che PostgreSQL permette l'aggiunta di nuovi valori all'enumerazione e la modifica di quelli esistenti ma non permette di rimuovere valori.
+\begin{minted}{sql}
+CREATE TYPE lingua AS enum (
+  'Inglese', 'Tedesco', 'Francese', 
+  'Polacco', 'Russo', 'Arabo', 'Cinese', 
+  'Giapponese', 'Coreano', 'Portoghese', 
+  'Svedese', 'Indiano', 'Italiano'
+);
+\end{minted}
 
 \subsection{Definizione delle tabelle}
 Seguono le tabelle definite sulla base dello \hyperlink{page.15}{schema relazionale}.
@@ -991,33 +1018,30 @@ CREATE TABLE fornitore (
 CREATE TABLE dipartimento (
   nome varchar(50) PRIMARY KEY, 
   recapito_telefonico numeric(10, 0) UNIQUE, 
-  numero_fornitori integer NOT null DEFAULT 0
+  numero_fornitori integer NOT NULL DEFAULT 0
 );
 
 CREATE TABLE rifornisce (
-  dipartimento varchar(50) REFERENCES dipartimento(nome), 
-  fornitore numeric(11, 0) REFERENCES fornitore(partitaiva), 
+  dipartimento varchar(50) REFERENCES dipartimento(nome) ON UPDATE CASCADE ON DELETE CASCADE, 
+  fornitore numeric(11, 0) REFERENCES fornitore(partitaiva) ON UPDATE CASCADE ON DELETE CASCADE, 
   PRIMARY KEY (dipartimento, fornitore)
 );
 
-CREATE TABLE lingua (
-  lingua varchar(20) PRIMARY KEY
-);
-
 CREATE TABLE impiegato (
-  matricola integer PRIMARY KEY, 
-  nome varchar (20), 
-  cognome varchar (20), 
-  data_di_nascita date, 
-  data_di_assunzione date, 
-  dipartimento varchar(50) REFERENCES dipartimento(nome), 
-  qualifica varchar (20), 
-  numero_progetti integer NOT null DEFAULT 0
+matricola integer PRIMARY KEY, 
+nome varchar (20), 
+cognome varchar (20), 
+data_di_nascita date, 
+data_di_assunzione date, 
+dipartimento varchar(50) REFERENCES dipartimento(nome) ON UPDATE CASCADE ON DELETE RESTRICT, 
+qualifica varchar (20), 
+numero_progetti integer NOT null DEFAULT 0
 );
 
 CREATE TABLE segretario (
-  impiegato integer REFERENCES impiegato(matricola), 
-  lingua varchar(20) REFERENCES lingua(lingua)
+impiegato integer REFERENCES impiegato(matricola) ON UPDATE CASCADE ON DELETE CASCADE, 
+lingua lingua, 
+PRIMARY KEY (impiegato, lingua)
 );
 
 CREATE TABLE competenza (
@@ -1033,37 +1057,37 @@ CREATE TABLE citta (
 );
 
 CREATE TABLE progetto (
-  numero integer PRIMARY KEY, 
-  budget integer, 
-  citta varchar(20), 
-  regione varchar(20), 
-  FOREIGN KEY(citta, regione) REFERENCES citta(nome, regione)
+numero integer PRIMARY KEY, 
+budget integer, 
+citta varchar(20), 
+regione varchar(20), 
+FOREIGN KEY(citta, regione) REFERENCES citta(nome, regione) ON UPDATE CASCADE ON DELETE RESTRICT
 );
 
 CREATE TABLE matrimonio (
-  marito integer REFERENCES impiegato (matricola) PRIMARY KEY, 
-  moglie integer REFERENCES impiegato(matricola) UNIQUE NOT null, 
-  data_di_matrimonio date, 
-  CONSTRAINT marito_moglie_diversi CHECK(marito <> moglie)
+marito integer REFERENCES impiegato (matricola) ON UPDATE CASCADE ON DELETE CASCADE PRIMARY KEY, 
+moglie integer REFERENCES impiegato(matricola) ON UPDATE CASCADE ON DELETE CASCADE UNIQUE NOT null, 
+data_di_matrimonio date, 
+CONSTRAINT marito_moglie_diversi CHECK(marito <> moglie)
 );
 
 CREATE TABLE laureato (
-  impiegato integer REFERENCES impiegato(matricola), 
-  tipo_laurea varchar (20), 
-  materia varchar (50), 
-  PRIMARY KEY (impiegato, tipo_laurea, materia)
+impiegato integer REFERENCES impiegato(matricola) ON UPDATE CASCADE ON DELETE CASCADE, 
+tipo_laurea varchar (20), 
+materia varchar (50), 
+PRIMARY KEY (impiegato, tipo_laurea, materia)
 );
 
 CREATE TABLE partecipa (
-  impiegato integer REFERENCES impiegato(matricola), 
-  competenza integer REFERENCES competenza(codice), 
-  progetto integer REFERENCES progetto(numero), 
-  PRIMARY KEY(impiegato, competenza, progetto)
+impiegato integer REFERENCES impiegato(matricola) ON UPDATE CASCADE ON DELETE CASCADE, 
+competenza integer REFERENCES competenza(codice) ON UPDATE CASCADE ON DELETE RESTRICT, 
+progetto integer REFERENCES progetto(numero) ON UPDATE CASCADE ON DELETE RESTRICT, 
+PRIMARY KEY(impiegato, competenza, progetto)
 );
 \end{minted}
 
 \subsection{Definizione delle viste}
-Segue la definizione di una vista per facilitare alcune interrogazioni.
+Segue la definizione di una vista che è stata formulata per facilitare alcune interrogazioni e l'implementazione del vincolo aziendale relativo alla partecipazione ai progetti da parte degli impiegati.
 \begin{minted}{sql}
 CREATE VIEW cittaprogetto(progetto, citta, regione) AS 
 SELECT 
@@ -1079,9 +1103,10 @@ FROM
 \newpage
 
 \subsection{Definizione dei trigger}
-Segue la definizione dei trigger relativi ai vincolo aziendali e alla consistenza della base di dati.
+Segue la definizione dei trigger relativi ai vincoli aziendali e alla consistenza della base di dati.
 
 \subsubsection{Vincolo aziendale relativo alla partecipazione ai progetti per città}
+La funzione con trigger implementa il primo \hyperlink{page.9}{vincolo aziendale}.
 \begin{minted}{sql}
 CREATE 
 OR REPLACE FUNCTION max_progetto_citta() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN IF (
@@ -1120,7 +1145,12 @@ UPDATE
 
 \newpage
 
-\subsubsection{Vincolo aziendale relativo ai segretari} % TODO
+\subsubsection{Vincolo aziendale relativo agli impiegati con qualifica di segretario}
+Le funzioni seguenti implementano il \hyperlink{page.16}{vincolo aziendale sugli impiegati con qualifica di segretari}, con un ulteriore garanzia relativa alla tabella segretario.
+
+\subsubsection*{Vincolo su impiegato}
+
+Un impiegato segretario deve conoscere almeno una lingua quindi la seguente funzione con trigger impedisce l'inserimento di impiegati con qualifica "Segretario", o l'attribuzione della stessa a impiegati che ne possedevano una diversa, se l'impiegato non è già presente nella tabella \textbf{segretario} dove la lingua fa parte della chiave primaria.
 \begin{minted}{sql}
 CREATE 
 OR REPLACE FUNCTION impiegato_segretario() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN IF (
@@ -1128,7 +1158,7 @@ OR REPLACE FUNCTION impiegato_segretario() RETURNS TRIGGER LANGUAGE plpgsql AS $
   AND (
     NOT EXISTS (
       SELECT 
-        impiegato 
+        * 
       FROM 
         segretario 
       WHERE 
@@ -1141,13 +1171,83 @@ RETURN new;
 END $$;
 
 CREATE TRIGGER impiegato_segretario before 
+INSERT 
+OR 
 UPDATE 
   ON impiegato FOR each ROW execute procedure impiegato_segretario();
 \end{minted}
 
 \newpage
 
+\subsubsection*{Vincolo su segretario}
+
+La funzione, questa volta con un check integrato nella tabella, implementa un ulteriore vincolo la cui utilità è associata a quella del precedente. Questo vincolo è necessario a garantire che nella tabella segretario siano presenti solo impiegati con tale qualifica.
+\begin{minted}{sql}
+CREATE 
+OR REPLACE FUNCTION vincolo_segretario(m integer) RETURNS boolean LANGUAGE plpgsql AS $$ BEGIN IF (
+  m NOT IN (
+    SELECT 
+        matricola 
+    FROM 
+        impiegato 
+    WHERE 
+          qualifica = 'Segretario' 
+        OR 
+          qualifica IS NULL 
+  )
+) THEN RETURN false;
+END IF;
+RETURN true;
+END $$;
+
+ALTER TABLE segretario 
+    ADD CONSTRAINT vincolo_segretario 
+        CHECK (vincolo_segretario(impiegato));
+\end{minted}
+Come è facile intuire la coesistenza dei due trigger precedenti non permette l'inserimento di impiegati con qualifica di segretario o di segretari.
+\newline
+\newline
+Noto che PostgreSQL non permette il deferimento di vincoli di tipo CHECK (e NOT NULL ma non è questo il caso) e volendo rispettare a pieno le specifiche che prevedevano "Segretario" come possibile valore dell'attributo qualifica, si è optato per l'utilizzo del valore temporaneo null come "jolly" per permettere gli inserimenti senza rinunciare a nessuno dei due vincoli.
+\newline
+\newline
+Il comportamento della base di dati può essere chiarito visionando la \hyperlink{page.36}{transazione relativa} all'inserimento di impiegati segretari.
+
+\newpage
+
+\subsubsection{Vincolo relativo ai matrimoni}
+La funzione con trigger implementa un vincolo sulla tabella matrimonio che previene ad esempio che un impiegato risulti contemporaneamente sposato con più impiegati diversi o che sia possibile inserire coppie permutate.
+\newline
+L'eventualità dell'impiegato sposato con se stesso era già gestita con un constraint a livello di \hyperlink{page.27}{tabella}.
+\begin{minted}{sql}
+CREATE 
+OR REPLACE FUNCTION matrimonio_unico() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN IF (
+  EXISTS (
+    SELECT 
+      * 
+    FROM 
+      matrimonio 
+    WHERE 
+      marito = new.marito 
+      OR marito = new.moglie 
+      OR moglie = new.marito 
+      OR moglie = new.moglie
+  )
+) THEN RETURN old;
+END IF;
+RETURN new;
+END $$;
+
+CREATE TRIGGER matrimonio_unico before 
+INSERT 
+OR 
+UPDATE 
+  ON matrimonio FOR each ROW execute procedure matrimonio_unico();
+\end{minted}
+
+\newpage
+
 \subsubsection{Sincronizzazione attributo derivato numero fornitori di dipartimento}
+Seguono funzioni e trigger necessari per la gestione del primo attributo derivato.
 \begin{minted}{sql}
 CREATE 
 OR replace FUNCTION numero_fornitori_inc() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
@@ -1207,6 +1307,7 @@ UPDATE
 \newpage
 
 \subsubsection{Sincronizzazione attributo derivato numero progetti di impiegato}
+Seguono funzioni e trigger necessari per la gestione del secondo attributo derivato.
 \begin{minted}{sql}
 CREATE 
 OR replace FUNCTION numero_progetti_inc() RETURNS TRIGGER LANGUAGE plpgsql AS $$ BEGIN 
@@ -1265,7 +1366,7 @@ UPDATE
 \newpage
 
 \subsection{Definizione degli indici}
-Segue la definizione degli indici analizzati in \hyperlink{page.17}{precedenza}.
+Segue la definizione degli indici analizzati in fase di \hyperlink{page.17}{progettazione fisica}.
 
 \subsubsection{Indice su qualifica}
 \begin{minted}{sql}
@@ -1286,14 +1387,14 @@ CREATE INDEX index_progetto_budget ON progetto(budget);
 \end{minted}
 
 \subsection{Interrogazioni}
-Vengono presentate alcune interrogazioni rilevanti costruite sulla base delle operazioni frequenti.
+Vengono presentate alcune interrogazioni rilevanti costruite sulla base dei \hyperlink{page.17}{requisiti operazionali}.
 
 \subsubsection{Ricerca dei segretari che conoscono una determinata lingua}
 \begin{minted}{sql}
 SELECT 
   impiegato.matricola, 
   impiegato.nome, 
-  impiegato.cognome;
+  impiegato.cognome 
 FROM 
   impiegato, 
   segretario 
@@ -1338,7 +1439,7 @@ WHERE
     FROM 
       matrimonio
   ) 
-  or matricola IN (
+  OR matricola IN (
     SELECT 
       moglie 
     FROM 
@@ -1364,10 +1465,10 @@ FROM
   progetto;
 \end{minted}
 
-\subsubsection{Ricerca del numero di dipendenti per città}
+\subsubsection{Ricerca del numero di dipendenti in una determinata città}
 \begin{minted}{sql}
 SELECT 
-  count(DISTINCT impiegato) 
+  COUNT(DISTINCT impiegato) 
 FROM 
   partecipa AS p 
   JOIN progetto AS ptt ON p.progetto = ptt.numero 
@@ -1384,6 +1485,8 @@ FROM
 WHERE 
   matricola = 69992;
 \end{minted}
+
+\newpage
 
 \subsubsection{Ricerca del numero di fornitori di un dipartimento}
 \begin{minted}{sql}
@@ -1409,8 +1512,18 @@ VALUES
   ('V8644XS', 23489419167);
 \end{minted}
 
-\subsubsection{Inserimento di un impiegato con qualifica di segretario} % TODO
+\subsubsection{Inserimento di un impiegato segretario}
+A causa dei vincoli, per inserirne un segretario è necessario inserire prima un impiegato con qualifica nulla.
+\newline
+Dopodiché sarà possibile l'inserimento di un record riferito a quella matricola nella tabella segretario, corredato di una lingua.
+\newline
+Solo in seguito è possibile aggiornare la qualifica dell'impiegato in segretario.
+\newline
+\newline
+Si prevede quindi l'utilizzo di una transazione:
 \begin{minted}{sql}
+START TRANSACTION;
+
 INSERT INTO impiegato 
     (matricola, nome, cognome, data_di_nascita, data_di_assunzione, dipartimento, qualifica) 
 VALUES 
@@ -1426,17 +1539,22 @@ SET
   qualifica = 'Segretario' 
 WHERE 
   matricola = 28172;
+
+COMMIT;
 \end{minted}
+% TODO: essere più specifici, estendere la trattazione di cosa si è provato e perché si è scelto così
+Non è possibile automatizzare oltre il processo perché l'informazione relativa alla lingua deve necessariamente essere inserita a mano.
 
 \newpage
 
 \section{Analisi dei dati}
-Una volta completata l'implementazione e inseriti i dati di mockup è stato possibile procedere all'analisi dei dati in R. Viene presentato il codice SQL usato per raccogliere i dati seguito da un'opportuno grafico.
+Una volta completata l'implementazione e inseriti i dati di mockup è stato possibile procedere all'analisi dei dati in R. Viene presentato il codice SQL usato per raccogliere i dati seguito da un opportuno grafico prodotto a partire dall'elaborazione degli stessi.
 \newline
 \newline
 Per questo fine sono state utilizzate le librerie RPostgreSQL, dplyr e ggplot2, rispettivamente per la connessione alla base di dati, per la manipolazione dei risultati delle query e per produrre e salvare le visualizzazioni.
 
 \subsection{Numero progetti per città}
+A seguito dell'interrogazione sono stati prodotti dei bar plot raffiguranti, per ciascuna città, il numero di progetti attivi.
 \begin{minted}{sql}
 SELECT citta, COUNT(*) 
 FROM cittaprogetto 
@@ -1450,8 +1568,11 @@ ORDER BY citta;
 \newpage
 
 \subsection{Distribuzione data di nascita per qualifica}
+A seguito dell'interrogazione sono stati prodotti dei box plot raffiguranti, per ciascuna qualifica, la distribuzione della data di nascita degli impiegati.
+\newline
+Come si può notare la mediana delle date di nascita degli analisti, impiegati, programmatori e segretari si attesta tra gli anni 1980 e 1990 mentre la mediana delle date di nascita dei manager si attesta tra gli anni 1970 e 1980 con la presenza di 2 outlier.
 \begin{minted}{sql}
-SELECT data_di_nascita, qualifica
+SELECT data_di_nascita, qualifica 
 FROM impiegato;
 \end{minted}
 \begin{center}
@@ -1461,6 +1582,9 @@ FROM impiegato;
 \newpage
 
 \subsection{Numero segretari per lingua}
+A seguito dell'interrogazione sono stati prodotti dei bar plot raffiguranti, per ciascuna lingua, il numero di segretari che conosce quella determinata lingua.
+\newline
+Come si può notare i segretari dell'azienda rappresentata nella nostra banca dati conoscono un ampio spettro di lingue straniere, con una preminenza di conoscitori della lingua francese, svedese e tedesca.
 \begin{minted}{sql}
 SELECT lingua, count(*) 
 FROM segretario 
@@ -1474,6 +1598,9 @@ ORDER BY lingua;
 \newpage
 
 \subsection{Distribuzione budget per città}
+A seguito dell'interrogazione sono stati prodotti dei box plot raffiguranti, per ciascuna città, la distribuzione del budget dei progetti lì svolti.
+\newline
+Come si può notare la mediana dei budget di tutte le città, esclusa Tampa, si attesta in un intervallo compreso tra i 2,5 milioni e tra i 6 milioni.
 \begin{minted}{sql}
 SELECT budget, citta 
 FROM progetto;
@@ -1485,6 +1612,11 @@ FROM progetto;
 \newpage
 
 \subsection{Distribuzione partecipazioni a progetto con competenze}
+A seguito dell'interrogazione è stato prodotto un box plot raffigurante la distribuzione delle partecipazioni per competenza.
+\newline
+Come si può notare la mediana di partecipazioni in cui viene applicata una competenza è 300 con una varianza compresa tra 290 e 310.
+\newline
+Non compaiono dei veri e propri outlier ma alcune competenze sono impiegate meno (270) o più spesso (325).
 \begin{minted}{sql}
 SELECT descrizione, COUNT(*) FROM competenza, partecipa 
 WHERE codice = partecipa.competenza 
@@ -1498,6 +1630,9 @@ ORDER BY descrizione;
 \newpage
 
 \subsection{Distribuzione impiegati per dipartimento}
+A seguito dell'interrogazione è stato prodotto un box plot raffigurante la distribuzione degli impiegati per dipartimento.
+\newline
+Come si può notare si ha una mediana di circa 150 impiegati per dipartimento con un outlier prossimo ai 230.
 \begin{minted}{sql}
 SELECT dipartimento, COUNT(*) 
 FROM impiegato, partecipa 
@@ -1512,6 +1647,9 @@ ORDER BY dipartimento
 \newpage
 
 \subsection{Percentuale impiegati laureati}
+A seguito dell'interrogazione è stato prodotto un diagramma a torta raffigurante il numero di impiegati laureati e non.
+\newline
+Come si può notare dal grafico il 66.7\% degli impiegati non ha conseguito una laurea, mentre il 33\% degli impiegati risulta laureato.
 \begin{minted}{sql}
 SELECT COUNT(*) 
 FROM laureato 
@@ -1525,12 +1663,15 @@ WHERE NOT EXISTS(
     );
 \end{minted}
 \begin{center}
-\includegraphics[width=\textwidth]{plot_perc_laureati.png}
+\includegraphics[width=.96\textwidth]{plot_perc_laureati.png}
 \end{center}
 
 \newpage
 
 \subsection{Percentuale impiegati per qualifica}
+A seguito dell'interrogazione è stato prodotto un diagramma a torta raffigurante, per ciascuna qualifica, la percentuale di dipendenti impiegati con quella determinata qualifica.
+\newline
+Come si può notare dal grafico quasi il 50\% degli impiegati sono dei programmatori, mentre i manager ed i segretari costituiscono una parte marginale dell'organico dell'azienda.
 \begin{minted}{sql}
 SELECT qualifica, COUNT(*)/(SUM(COUNT(*)) OVER()) AS frequenza 
 FROM impiegato 
@@ -1542,7 +1683,24 @@ GROUP BY qualifica;
 
 \newpage
 
-\section{Conclusioni}
-
+\section{Conclusione}
+La relazione descrive la progettazione e implementazione di una base di dati relazionale per un'ipotetica azienda.
+\newline
+Il processo è partito dai requisiti forniti poi formalizzati in specifiche.
+\newline
+Particolare attenzione è stata rivolta alla fase di progettazione concettuale.
+\newline
+Per la realizzazione degli schemi è stato usato \href{https://www.diagrams.net}{Diagrams.net}.
+\newline
+Si è sfruttata la libreria \href{https://www.mockaroo.com/docs}{Mockaroo} per generare dati di mockup il più possibile adatti al dominio e significativi.
+\newline
+Ulteriori operazioni relative ai dati da inserire sono state svolte con espressioni regolari, bash e Python.
+\newline
+Per la collaborazione e i test sulla base di dati si sono sfruttati git, \href{https://www.overleaf.com/}{Overleaf}, container e virtualizzazione.
+\newline
+L'analisi dei dati in R è stata per quanto possibile automatizzata nella generazione di csv e grafici.
+\newline
+\newline
+In tutte le fasi del progetto si è fatto uso delle conoscenze acquisite durante il corso.
 \end{document}
 
